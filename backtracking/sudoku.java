@@ -1,10 +1,12 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
     public static int n;
     public static int[][] grid = new int[10][10];
     public static boolean[][] visited = new boolean[10][10];
+    public static ArrayList<Integer> answer = new ArrayList<>();
 
     public static boolean can_go(int row, int col){
 
@@ -18,22 +20,21 @@ public class Main {
         return true;
     }
 
-    public static void choose(int row, int col, int currNum, int currSum){
+    public static void choose(int col, int currRow, int currSum){
 
-        if (currNum == n){
+        if (currRow == n){
+            answer.add(currSum);
             return;
         }
-
-        for (int i = 0; i < n; row++){
-            for (int j = 0; j< n; col++){
-                if (can_go(row, col)){
-                    visited[i][j] = true;
-                    choose(i, j, currNum + 1, currSum + grid[row][col]);
-                    visited[i][j] = false;
-                }
+        for (int j = 0; j< n; j++){
+            if (can_go(currRow, j)){
+                visited[currRow][j] = true;
+                choose(j, currRow + 1, currSum + grid[currRow][col]);
+                visited[currRow][j] = false;
             }
         }
     }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         n = sc.nextInt();
@@ -42,6 +43,8 @@ public class Main {
                 grid[row][col] = sc.nextInt();
             }
         }
-        choose(0, 0, 0, 0);
+        choose(0, 0, 0);
+        Collections.sort(answer, Collections.reverseOrder());
+        System.out.print(answer.get(0));
     }
 }
